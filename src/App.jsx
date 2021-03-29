@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css'
-import { Container, Col, Form, Row } from 'react-bootstrap'
+import { Container, Col, Form, Row, Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import Movie from './components/Movie'
@@ -13,6 +13,7 @@ import Movie from './components/Movie'
 class App extends React.Component {
   state = {
     movieTitle: 'Batman forever',
+    showMovieSection: true
   }
 
   componentDidMount = () => {
@@ -49,9 +50,16 @@ class App extends React.Component {
           </Row>
           <Row>
             <Col md={{ span: 4, offset: 4 }}>
-              <Movie movie={this.state.movieTitle} />
+              <Button variant="success" onClick={() => this.setState({
+                showMovieSection: !this.state.showMovieSection
+              })}>TOGGLE IT</Button>
             </Col>
           </Row>
+          {this.state.showMovieSection && <Row>
+            <Col md={{ span: 4, offset: 4 }}>
+              <Movie movie={this.state.movieTitle} />
+            </Col>
+          </Row>}
         </Container>
       </div>
     )

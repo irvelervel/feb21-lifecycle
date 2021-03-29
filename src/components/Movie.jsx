@@ -3,6 +3,8 @@ import { Alert, Card, Spinner } from 'react-bootstrap'
 
 class Movie extends React.Component {
 
+    timer = null
+
     state = {
         isLoading: false,
         isError: false,
@@ -11,10 +13,20 @@ class Movie extends React.Component {
 
     componentDidMount = () => {
         console.log('componentDidMount in Movie')
+        // now this.props.movie will be "Batman forever"
         this.fetchMovieInfo()
+        this.timer = setInterval(() => console.log('time passes by'), 1000)
     }
 
-    componentDidUpdate = async (previousProps) => {
+    componentDidUpdate = async (previousProps, previousState) => {
+
+        // we'll enter here if there's a change in the PROPS or in the STATE
+
+        // we're entering here TWO times every time we select a new movie:
+        // 1) when we receive a new movie from the props (when this.props.movie changes)
+        // -- when this happens, we'll set a new state into this component, and we'll enter....
+        // 2) when we just set a new state, and this time we want to STOP, because we don't need to fetch new data
+
         console.log("I've just updated")
         console.log(previousProps) // are the props immediately before
         console.log(this.props) // the current props
@@ -23,8 +35,17 @@ class Movie extends React.Component {
 
         if (previousProps.movie !== this.props.movie) {
             // this is preventing an infinite loop
+            // we need to know if this refresh happened because we change the dropdown,
+            // so we're getting a new movie, OR if this refresh happened because we 
+            // fetched the movie info and we set the state
             this.fetchMovieInfo()
         }
+    }
+
+    componentWillUnmount = () => {
+        // get's called an instant before the unmounting of a component
+        console.log('THE MOVIE COMPONENT IS GOING TO DISAPPEAR')
+        clearInterval(this.timer)
     }
 
     fetchMovieInfo = async () => {
